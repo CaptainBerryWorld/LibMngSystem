@@ -32,8 +32,19 @@ class LibrarianMenu(CTkFrame):
 
         self.loans_button = CTkButton(self.button_frame, text="Manage Loans", command=self.show_loans_menu)
         self.loans_button.pack(side="left", padx=10, pady=10)
+        
+        #Logout Button
+        self.logout_button = CTkButton(self.button_frame, text="Logout", fg_color= "red", command=self.logout)
+        self.logout_button.pack(side="left", padx=10, pady=10)
 
         self.current_menu = None
+        
+    #Logout Function to login
+    def logout(self):
+        self.master.destroy()
+        # from gui.app import LibraryManagementApp
+        app = LibraryManagementApp()
+        app.mainloop()
 
     def show_book_search_menu(self):
         if self.current_menu:
