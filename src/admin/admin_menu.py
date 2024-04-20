@@ -12,18 +12,21 @@ class AdminMenu(CTkFrame):
 
         self.user_info = user_info
 
-        self.users_button = CTkButton(self, text="Manage Users", command=self.show_users_menu)
-        self.users_button.pack(pady=10)
+        self.button_frame = CTkFrame(self)
+        self.button_frame.pack(side="top", fill="x")
 
-        self.books_button = CTkButton(self, text="Manage Books", command=self.show_books_menu)
-        self.books_button.pack(pady=10)
+        self.users_button = CTkButton(self.button_frame, text="Manage Users", command=self.show_users_menu)
+        self.users_button.pack(side="left", padx=10, pady=10)
 
-        self.reports_button = CTkButton(self, text="View Reports", command=self.show_reports_menu)
-        self.reports_button.pack(pady=10)
+        self.books_button = CTkButton(self.button_frame, text="Manage Books", command=self.show_books_menu)
+        self.books_button.pack(side="left", padx=10, pady=10)
+
+        self.reports_button = CTkButton(self.button_frame, text="View Reports", command=self.show_reports_menu)
+        self.reports_button.pack(side="left", padx=10, pady=10)
         
         #Logout Button
-        self.logout_button = CTkButton(self, text="Logout", fg_color= "red", command=self.logout)
-        self.logout_button.pack(pady=10)
+        self.logout_button = CTkButton(self.button_frame, text="Logout", fg_color= "red", command=self.logout)
+        self.logout_button.pack(side="left", padx=10, pady=10)
 
         self.current_menu = None
 

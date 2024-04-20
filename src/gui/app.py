@@ -10,6 +10,8 @@ from librarian.librarian_menu import LibrarianMenu
 from reader.reader_menu import ReaderMenu
 
 customtkinter.set_appearance_mode("light")
+# customtkinter.set_appearance_mode("dark")
+# customtkinter.set_appearance_mode("system")
 class LibraryManagementApp(CTk):
     def __init__(self):
         super().__init__()

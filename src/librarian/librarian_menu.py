@@ -21,14 +21,17 @@ class LibrarianMenu(CTkFrame):
 
         self.user_info = user_info
 
-        self.book_search_button = CTkButton(self, text="Search Books", command=self.show_book_search_menu)
-        self.book_search_button.pack(pady=10)
+        self.button_frame = CTkFrame(self)
+        self.button_frame.pack(side = "top", fill="x")
         
-        self.books_button = CTkButton(self, text="Manage Books", command=self.show_books_menu)
-        self.books_button.pack(pady=10)
+        self.book_search_button = CTkButton(self.button_frame, text="Search Books", command=self.show_book_search_menu)
+        self.book_search_button.pack(side="left", padx=10, pady=10)
+        
+        self.books_button = CTkButton(self.button_frame, text="Manage Books", command=self.show_books_menu)
+        self.books_button.pack(side="left", padx=10, pady=10)
 
-        self.loans_button = CTkButton(self, text="Manage Loans", command=self.show_loans_menu)
-        self.loans_button.pack(pady=10)
+        self.loans_button = CTkButton(self.button_frame, text="Manage Loans", command=self.show_loans_menu)
+        self.loans_button.pack(side="left", padx=10, pady=10)
 
         self.current_menu = None
 
