@@ -22,16 +22,18 @@ class AdminMenu(CTkFrame):
         self.reports_button.pack(pady=10)
         
         #Logout Button
-        self.logout_button = CTkButton(self, text="Logout", command=self.logout)
+        self.logout_button = CTkButton(self, text="Logout", fg_color= "red", command=self.logout)
         self.logout_button.pack(pady=10)
 
         self.current_menu = None
 
     #Logout Function to login
     def logout(self):
-        self.pack_forget()
-        self.master.login_frame.pack(fill="both", expand=True)
-
+        self.master.destroy()
+        # from gui.app import LibraryManagementApp
+        app = LibraryManagementApp()
+        app.mainloop()
+        
     def show_users_menu(self):
         if self.current_menu:
             self.current_menu.pack_forget()

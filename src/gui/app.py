@@ -1,5 +1,6 @@
 import os
 import sys
+import customtkinter
 from tkinter import messagebox, PhotoImage, Label
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from customtkinter import CTk, CTkFrame, CTkButton, CTkLabel, CTkEntry
@@ -8,6 +9,7 @@ from admin.admin_menu import AdminMenu
 from librarian.librarian_menu import LibrarianMenu
 from reader.reader_menu import ReaderMenu
 
+customtkinter.set_appearance_mode("light")
 class LibraryManagementApp(CTk):
     def __init__(self):
         super().__init__()
@@ -31,15 +33,15 @@ class LibraryManagementApp(CTk):
         instructions_label.pack(pady=10)
 
         # Add username entry
-        self.username_entry = CTkEntry(self.login_frame, placeholder_text="Username or E-mail", width=300, height=40, border_width=1, corner_radius=5, text_color="white", fg_color="transparent")
+        self.username_entry = CTkEntry(self.login_frame, placeholder_text="Username or E-mail", width=300, height=40, border_width=1, corner_radius=5, text_color="black", fg_color="transparent")
         self.username_entry.pack(padx=10,pady=10)
 
         # Add password entry
-        self.password_entry = CTkEntry(self.login_frame, placeholder_text="Password", show="*", width=300, height=40, border_width=1, corner_radius=5, text_color="white", fg_color="transparent")
+        self.password_entry = CTkEntry(self.login_frame, placeholder_text="Password", show="*", width=300, height=40, border_width=1, corner_radius=5, text_color="black", fg_color="transparent")
         self.password_entry.pack(padx=10, pady=10)
 
         # Add login button
-        login_button = CTkButton(self.login_frame, text="Login", width=300, height=40, corner_radius=5, fg_color="#3B5998", text_color="white", hover_color="#2D4373", command=self.handle_login)
+        login_button = CTkButton(self.login_frame, text="Login", width=300, height=40, corner_radius=5, fg_color=("#DB3E39", "#821D1A"), text_color="white", hover_color="#2D4373", command=self.handle_login)
         login_button.pack(pady=20)
 
     def handle_login(self):
