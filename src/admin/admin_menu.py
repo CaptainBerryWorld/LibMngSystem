@@ -70,27 +70,31 @@ class UsersMenu(CTkFrame):
         self.notebook.add(self.add_user_tab, text='Add a New User')
 
         self.name_label = CTkLabel(self.add_user_tab, text="Name")
-        self.name_label.pack()
+        self.name_label.pack(anchor="w")
+
         self.name_entry = CTkEntry(self.add_user_tab)
-        self.name_entry.pack()
+        self.name_entry.pack(anchor="w")
 
         self.email_label = CTkLabel(self.add_user_tab, text="Email")
-        self.email_label.pack()
+        self.email_label.pack(anchor="w")
+
         self.add_email_entry = CTkEntry(self.add_user_tab)
-        self.add_email_entry.pack()
+        self.add_email_entry.pack(anchor="w")
 
         self.password_label = CTkLabel(self.add_user_tab, text="Password")
-        self.password_label.pack()
+        self.password_label.pack(anchor="w")
+
         self.password_entry = CTkEntry(self.add_user_tab, show="*")
-        self.password_entry.pack()
+        self.password_entry.pack(anchor="w")
         
         self.confirm_password_label = CTkLabel(self.add_user_tab, text="Confirm Password")
-        self.confirm_password_label.pack()
+        self.confirm_password_label.pack(anchor="w")
+
         self.confirm_password_entry = CTkEntry(self.add_user_tab, show="*")
-        self.confirm_password_entry.pack()
+        self.confirm_password_entry.pack(anchor="w")
 
         self.add_user_button = CTkButton(self.add_user_tab, text="Add User", command=self.add_user)
-        self.add_user_button.pack()
+        self.add_user_button.pack(anchor="w")
         
 
         # Unlock User Utility Tab
@@ -98,46 +102,46 @@ class UsersMenu(CTkFrame):
         self.notebook.add(self.unlock_user_tab, text='Unlock User Utility')
 
         self.locked_users_label = CTkLabel(self.unlock_user_tab, text="Locked Users")
-        self.locked_users_label.pack(pady=10)
+        self.locked_users_label.pack(pady=10, anchor="w")
 
         self.locked_users_listbox = tk.Listbox(self.unlock_user_tab, width=30)
-        self.locked_users_listbox.pack(pady=10)
+        self.locked_users_listbox.pack(pady=10, anchor="w")
 
         self.unlock_user_button = CTkButton(self.unlock_user_tab, text="Unlock User", command=self.unlock_user)
-        self.unlock_user_button.pack(pady=10)
+        self.unlock_user_button.pack(pady=10, anchor="w")
 
         self.exit_button = CTkButton(self.unlock_user_tab, text="Exit", command=self.unlock_user_tab.destroy)
-        self.exit_button.pack(pady=10)
+        self.exit_button.pack(pady=10, anchor="w")
 
         # Change User Password Tab
         self.change_password_tab = CTkFrame(self.notebook)
         self.notebook.add(self.change_password_tab, text='Change User Password')
 
         self.change_password_label = CTkLabel(self.change_password_tab, text="Change User Password")
-        self.change_password_label.pack()
+        self.change_password_label.pack(anchor="w")
 
         self.user_id_label = CTkLabel(self.change_password_tab, text="User ID")
         self.user_id_label.pack()
         self.user_id_entry = CTkEntry(self.change_password_tab)
-        self.user_id_entry.pack()
+        self.user_id_entry.pack(anchor="w")
 
         self.old_password_label = CTkLabel(self.change_password_tab, text="Old Password")
-        self.old_password_label.pack()
+        self.old_password_label.pack(anchor="w")
         self.old_password_entry = CTkEntry(self.change_password_tab, show="*")
-        self.old_password_entry.pack()
+        self.old_password_entry.pack(anchor="w")
 
         self.new_password_label = CTkLabel(self.change_password_tab, text="New Password")
-        self.new_password_label.pack()
+        self.new_password_label.pack(anchor="w")
         self.new_password_entry = CTkEntry(self.change_password_tab, show="*")
-        self.new_password_entry.pack()
+        self.new_password_entry.pack(anchor="w")
 
         self.confirm_password_label = CTkLabel(self.change_password_tab, text="Confirm Password")
-        self.confirm_password_label.pack()
+        self.confirm_password_label.pack(anchor="w")
         self.confirm_password_entry = CTkEntry(self.change_password_tab, show="*")
-        self.confirm_password_entry.pack()
+        self.confirm_password_entry.pack(anchor="w")
 
         self.change_password_button = CTkButton(self.change_password_tab, text="Change Password", command=self.change_password)
-        self.change_password_button.pack()
+        self.change_password_button.pack(anchor="w")
 
         # User Maintenance Tab
         self.user_maintenance_tab = CTkFrame(self.notebook)
@@ -261,14 +265,14 @@ class BooksMenu(CTkFrame):
         self.notebook.add(self.add_charges_tab, text='Add Charges')
 
         # Add New Charges Widgets
-        self.charge_no_label = CTkLabel(self.add_charges_tab, text="Charge No")
+        self.charge_no_label = CTkLabel(self.add_charges_tab, text="Charge Name")
         self.charge_no_entry = CTkEntry(self.add_charges_tab)
-        self.charge_desc_label = CTkLabel(self.add_charges_tab, text="Charge Desc")
+        self.charge_desc_label = CTkLabel(self.add_charges_tab, text="Charge Description")
         self.charge_desc_entry = CTkEntry(self.add_charges_tab)
-        self.charge_label = CTkLabel(self.add_charges_tab, text="Charge")
+        self.charge_label = CTkLabel(self.add_charges_tab, text="Charge Price")
         self.charge_entry = CTkEntry(self.add_charges_tab)
         self.add_button = CTkButton(self.add_charges_tab, text="Add", command=self.add_charges)
-        self.ignore_button = CTkButton(self.add_charges_tab, text="Ignore")
+        self.ignore_button = CTkButton(self.add_charges_tab, command=self.ignore, text="Ignore")
         self.exit_button = CTkButton(self.add_charges_tab, text="Exit", command=self.add_charges_tab.destroy)
 
         # Grid the widgets in the "Add New Charges" tab
@@ -292,7 +296,7 @@ class BooksMenu(CTkFrame):
         self.description_label = CTkLabel(self.add_book_type_tab, text="Description")
         self.book_type_description_entry = CTkEntry(self.add_book_type_tab)
         self.add_button = CTkButton(self.add_book_type_tab, text="Add", command=self.add_book_type)
-        self.ignore_button = CTkButton(self.add_book_type_tab, text="Ignore")
+        self.ignore_button = CTkButton(self.add_book_type_tab, command=self.ignore, text="Ignore")
         self.exit_button = CTkButton(self.add_book_type_tab, text="Exit", command=self.add_book_type_tab.destroy)
 
         # Grid the widgets in the "Add New Book Type" tab
@@ -314,7 +318,7 @@ class BooksMenu(CTkFrame):
         self.description_label = CTkLabel(self.add_book_code_tab, text="Description")
         self.description_entry = CTkEntry(self.add_book_code_tab)
         self.add_button = CTkButton(self.add_book_code_tab, text="Add", command=self.add_book_code)
-        self.ignore_button = CTkButton(self.add_book_code_tab, text="Ignore")
+        self.ignore_button = CTkButton(self.add_book_code_tab, command=self.ignore , text="Ignore")
         self.exit_button = CTkButton(self.add_book_code_tab, text="Exit", command=self.add_book_code_tab.destroy)
 
         # Grid the widgets in the "Add New Book Code" tab
@@ -386,7 +390,18 @@ class BooksMenu(CTkFrame):
         # View charges functionality
         pass
     
-    
+    # ignore button functionality
+    def ignore(self):
+        self.charge_no_entry.delete(0, tk.END)
+        self.charge_desc_entry.delete(0, tk.END)
+        self.charge_entry.delete(0, tk.END)
+        
+        self.type_no_entry.delete(0, tk.END)
+        self.book_type_description_entry.delete(0, tk.END)
+        
+        self.book_code_entry.delete(0, tk.END)
+        self.description_entry.delete(0, tk.END)
+        pass
 
 
 class ReportsMenu(CTkFrame):
@@ -404,6 +419,13 @@ class ReportsMenu(CTkFrame):
         self.book_code_tree = ttk.Treeview(self.view_book_code_listing_tab, columns=("Book Code", "Description"), show="headings")
         self.book_code_tree.heading("Book Code", text="Book Code")
         self.book_code_tree.heading("Description", text="Description")
+        
+        # View List of Book Codes from database
+        self.book_code_tree.delete(*self.book_code_tree.get_children())
+        book_codes = get_all_books()
+        for book_code in book_codes:
+            self.book_code_tree.insert("", tk.END, values=(book_code[1], book_code[2]))
+        
         self.book_code_tree.pack()
 
         # View User Listing Tab
@@ -413,15 +435,31 @@ class ReportsMenu(CTkFrame):
         self.user_tree = ttk.Treeview(self.view_user_listing_tab, columns=("User ID", "User Name"), show="headings")
         self.user_tree.heading("User ID", text="User ID")
         self.user_tree.heading("User Name", text="User Name")
+        
+        # View List of Users from database
+        self.user_tree.delete(*self.user_tree.get_children())
+        users = get_all_users()
+        for user in users:
+            self.user_tree.insert("", tk.END, values=(user[0], user[1]))
+                    
         self.user_tree.pack()
 
         # View Book Type Listing Tab
         self.view_book_type_listing_tab = CTkFrame(self.notebook)
         self.notebook.add(self.view_book_type_listing_tab, text='View Book Type Listing')
 
-        self.book_type_tree = ttk.Treeview(self.view_book_type_listing_tab, columns=("Book Type ID", "Book Type"), show="headings")
+        self.book_type_tree = ttk.Treeview(self.view_book_type_listing_tab, columns=("Book Type ID", "Book Type", "Description"), show="headings")
         self.book_type_tree.heading("Book Type ID", text="Book Type ID")
         self.book_type_tree.heading("Book Type", text="Book Type")
+        self.book_type_tree.heading("Description", text="Description")
+        self.book_type_tree.pack()
+        
+        # View List of Book Types from database
+        self.book_type_tree.delete(*self.book_type_tree.get_children())
+        book_types = get_all_books()
+        for book_type in book_types:
+            self.book_type_tree.insert("", tk.END, values=(book_type[0], book_type[1], book_type[2]))
+            
         self.book_type_tree.pack()
 
         self.notebook.pack(fill="both", expand=True)

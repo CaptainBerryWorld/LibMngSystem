@@ -1,7 +1,8 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from customtkinter import CTk, CTkFrame, CTkLabel, CTkButton, CTkEntry
 from customtkinter import CTkFrame, CTkLabel, CTkButton
+from datetime import datetime, timedelta
 from librarian.book_operations import search_books, get_available_books, issue_book, return_book
 from librarian.loan_management import get_all_loans, extend_loan_due_date, calculate_fine
 
@@ -111,41 +112,73 @@ class LoansMenu(CTkFrame):
 
         # Implement loan management functionality here
         # Managing books to given and returned by readers
-        self.loans_listbox = tk.Listbox(self)
-        self.loans_listbox.pack(fill="both", expand=True)
+        self.loans_treeview = ttk.Treeview(self)
+        self.loans_treeview.pack(fill="both", expand=True)
+        
+        self.loans_treeview["columns"] = ("User", "Book ID", "Issue Date", "Due Date", "Return Date", "Fine Amount")
+        
+        self.loans_treeview.heading("#0", text="Index")
+        self.loans_treeview.heading("User", text="User")
+        self.loans_treeview.heading("Book ID", text="Book ID")
+        self.loans_treeview.heading("Issue Date", text="Issue Date")
+        self.loans_treeview.heading("Due Date", text="Due Date")
+        self.loans_treeview.heading("Return Date", text="Return Date")
+        self.loans_treeview.heading("Fine Amount", text="Fine Amount")
+        
+        self.loans_treeview.column("#0", width=50)
+        self.loans_treeview.column("User", width=100)
+        self.loans_treeview.column("Book ID", width=100)
+        self.loans_treeview.column("Issue Date", width=100)
+        self.loans_treeview.column("Due Date", width=100)
+        self.loans_treeview.column("Return Date", width=100)
+        self.loans_treeview.column("Fine Amount", width=100)
         
         self.loans = get_all_loans()
         
-        for loan in self.loans:
-            self.loans_listbox.insert(tk.END, f"{loan[1]} - {loan[2]}")
+        for i, loan in enumerate(self.loans):
+            self.loans_treeview.insert(parent="", index="end", iid=i, text=str(i), values=(loan[1], loan[2], loan[3], loan[4], loan[5], f"GHS{loan[6]}"))
             
         self.extend_loan_button = CTkButton(self, text="Extend Loan Due Date", command=self.extend_loan_due_date)
         self.extend_loan_button.pack(pady=10)
         
         self.calculate_fine_button = CTkButton(self, text="Calculate Fine", command=self.calculate_fine)
         self.calculate_fine_button.pack(pady=10)
-        
+    
     def extend_loan_due_date(self):
-        selected_index = self.loans_listbox.curselection()
+        self.selected_index = int(self.loans_treeview.focus())  # Convert selected_index to an integer
         
-        if selected_index:
-            loan_id = self.loans[selected_index[0]][0]
-            extend_loan_due_date(loan_id)
-            
+        if self.selected_index:
+            self.loan_id = self.loans[self.selected_index][0]
+            # Set new due date to 2 weeks from now
+            new_due_date = datetime.now() + timedelta(weeks=2)
+            extend_loan_due_date(self.loan_id, new_due_date)  # Pass the new_due_date argument
             self.loans = get_all_loans()
-            self.loans_listbox.delete(0, tk.END)
+            self.loans_treeview.delete(*self.loans_treeview.get_children())
             
-            for loan in self.loans:
-                self.loans_listbox.insert(tk.END, f"{loan[1]} - {loan[2]}")
+            for i, loan in enumerate(self.loans):
+                self.loans_treeview.insert(parent="", index="end", iid=i, text=str(i), values=(loan[1], loan[2], loan[3], loan[4], loan[5], f"GHS{loan[6]}"))
+                
+            messagebox.showinfo("Success", "Loan extended successfully")
+        
+        else:            
+            messagebox.showerror("Error", "Please select a loan to extend")
+        pass
                 
     def calculate_fine(self):
-        selected_index = self.loans_listbox.curselection()
+        selected_index = self.loans_treeview.focus()
         
         if selected_index:
-            loan_id = self.loans[selected_index[0]][0]
-            fine = calculate_fine(loan_id)
+            selected_index = int(selected_index)
+            loan_id = self.loans[selected_index][0]
+            issue_date = str(self.loans[selected_index][3])  # Convert issue_date to a string
+            fine = calculate_fine(loan_id)  # Remove the issue_date argument
             
-            messagebox.showinfo("Fine", f"The fine for loan {loan_id} is {fine}")
+            if fine:
+                messagebox.showinfo("Fine", f"Fine: {fine}")
+            else:
+                messagebox.showinfo("Fine", "No Fine")
+                
+        pass
         
         
 class BooksMenu(CTkFrame):
@@ -166,7 +199,7 @@ class BooksMenu(CTkFrame):
         self.charge_label = CTkLabel(self.add_charges_tab, text="Charge")
         self.charge_entry = CTkEntry(self.add_charges_tab)
         self.add_button = CTkButton(self.add_charges_tab, text="Add", command=lambda: print("New charge added"))
-        self.ignore_button = CTkButton(self.add_charges_tab, text="Ignore")
+        self.ignore_button = CTkButton(self.add_charges_tab, command=self.ignore, text="Ignore")
         self.exit_button = CTkButton(self.add_charges_tab, text="Exit", command=self.add_charges_tab.destroy)
 
         # Grid the widgets in the "Add New Charges" tab
@@ -190,7 +223,7 @@ class BooksMenu(CTkFrame):
         self.description_label = CTkLabel(self.add_book_type_tab, text="Description")
         self.description_entry = CTkEntry(self.add_book_type_tab)
         self.add_button = CTkButton(self.add_book_type_tab, text="Add", command=lambda: print("New book type added"))
-        self.ignore_button = CTkButton(self.add_book_type_tab, text="Ignore")
+        self.ignore_button = CTkButton(self.add_book_type_tab, command=self.ignore, text="Ignore")
         self.exit_button = CTkButton(self.add_book_type_tab, text="Exit", command=self.add_book_type_tab.destroy)
 
         # Grid the widgets in the "Add New Book Type" tab
@@ -212,7 +245,7 @@ class BooksMenu(CTkFrame):
         self.description_label = CTkLabel(self.add_book_code_tab, text="Description")
         self.description_entry = CTkEntry(self.add_book_code_tab)
         self.add_button = CTkButton(self.add_book_code_tab, text="Add", command=lambda: print("New book code added"))
-        self.ignore_button = CTkButton(self.add_book_code_tab, text="Ignore")
+        self.ignore_button = CTkButton(self.add_book_code_tab, command=self.ignore, text="Ignore")
         self.exit_button = CTkButton(self.add_book_code_tab, text="Exit", command=self.add_book_code_tab.destroy)
 
         # Grid the widgets in the "Add New Book Code" tab
@@ -225,3 +258,59 @@ class BooksMenu(CTkFrame):
         self.exit_button.grid(row=3, column=0, columnspan=2)
 
         self.notebook.pack(fill="both", expand=True)
+        
+    def add_charges(self):
+        # Add charges functionality
+        self.charge_no = self.charge_no_entry.get()
+        self.charge_desc = self.charge_desc_entry.get()
+        self.charge = self.charge_entry.get()
+        
+        # Check if the fields are filled
+        if not self.charge_no or not self.charge_desc or not self.charge:
+            messagebox.showerror("Error", "All fields must be filled")
+            return
+        
+        messagebox.showinfo("Success","Charge added sucessfully")
+        pass
+    
+    def add_book_type(self):
+        # Add book type functionality
+        self.type_no = self.type_no_entry.get()
+        self.descr_entry = self.book_type_description_entry.get()
+        
+        if not self.type_no or not self.descr_entry:
+            messagebox.showerror("Error", "All fields must be filled")
+            return
+        
+        messagebox.showinfo("Success","Book type added successfully")
+               
+        pass
+    
+    def add_book_code(self):
+        # Add book code functionality
+        self.book_code = self.book_code_entry.get()
+        self.desc_entry = self.description_entry.get()
+        
+        if not book_code or not desc_entry:
+            messagebox.showerror("Error", "All fields must be filled")
+            return
+        
+        messagebox.showinfo("Success","Book code added successfully")
+        
+        pass
+    
+    
+    # ignore button functionality
+    def ignore(self):
+        self.charge_no_entry.delete(0, tk.END)
+        self.charge_desc_entry.delete(0, tk.END)
+        self.charge_entry.delete(0, tk.END)
+        
+        self.type_no_entry.delete(0, tk.END)
+        self.description_entry.delete(0, tk.END)
+        
+        self.book_code_entry.delete(0, tk.END)
+        self.description_entry.delete(0, tk.END)
+        
+        pass
+
