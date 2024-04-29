@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from customtkinter import CTk, CTkFrame, CTkLabel, CTkButton, CTkEntry
 from customtkinter import CTkFrame, CTkLabel, CTkButton
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from librarian.book_operations import search_books, get_available_books, issue_book, return_book
 from librarian.loan_management import get_all_loans, extend_loan_due_date, calculate_fine
 
@@ -165,21 +165,26 @@ class LoansMenu(CTkFrame):
         pass
                 
     def calculate_fine(self):
-        selected_index = self.loans_treeview.focus()
-        
-        if selected_index:
-            selected_index = int(selected_index)
-            loan_id = self.loans[selected_index][0]
-            issue_date = str(self.loans[selected_index][3])  # Convert issue_date to a string
-            fine = calculate_fine(loan_id)  # Remove the issue_date argument
-            
-            if fine:
-                messagebox.showinfo("Fine", f"Fine: {fine}")
+        self.selected_index = self.loans_treeview.focus()  # Get the selected item
+    
+        if self.selected_index:
+            self.selected_index = int(self.selected_index)  # Convert selected_index to an integer
+            self.loan_id = self.loans[self.selected_index][0]
+            fine_amount = calculate_fine(self.loan_id)
+    
+            # Check if fine_amount is an integer
+            if isinstance(fine_amount, int):
+                self.loans = get_all_loans()
+                self.loans_treeview.delete(*self.loans_treeview.get_children())
+    
+                for i, loan in enumerate(self.loans):
+                    self.loans_treeview.insert(parent="", index="end", iid=i, text=str(i), values=(loan[1], loan[2], loan[3], loan[4], loan[5], f"GHS{loan[6]}"))
+    
+                messagebox.showinfo("Fine Amount", f"Fine Amount: GHS{fine_amount}")
             else:
-                messagebox.showinfo("Fine", "No Fine")
-                
-        pass
-        
+                messagebox.showerror("Error", "Failed to calculate fine. Please try again.")
+        else:
+            messagebox.showerror("Error", "Please select a loan to calculate fine")
         
 class BooksMenu(CTkFrame):
     def __init__(self, master, user_info, **kwargs):

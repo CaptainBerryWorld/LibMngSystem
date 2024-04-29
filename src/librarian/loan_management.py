@@ -1,5 +1,6 @@
 from common.database import execute_query, execute_non_query
 from datetime import datetime, timedelta
+from datetime import datetime
 
 def get_all_loans():
     """
@@ -65,10 +66,9 @@ def calculate_fine(loan_id):
     """
     query = "SELECT issue_date, due_date, return_date FROM Loans WHERE loan_id = %s"
     result = execute_query(query, (loan_id,))[0]
-    
-    issue_date = datetime.strptime(result[0], "%Y-%m-%d")
-    due_date = datetime.strptime(result[1], "%Y-%m-%d")
-    return_date = datetime.strptime(result[2], "%Y-%m-%d")
+    issue_date = datetime.strptime(str(result[0]), "%Y-%m-%d")
+    due_date = datetime.strptime(str(result[1]), "%Y-%m-%d")  # Convert to string before parsing
+    return_date = datetime.strptime(result[2].strftime("%Y-%m-%d"), "%Y-%m-%d")  # Convert date to string
     
     if return_date > due_date:
         days_late = (return_date - due_date).days
