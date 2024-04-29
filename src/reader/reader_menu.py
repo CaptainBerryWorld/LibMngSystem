@@ -119,26 +119,67 @@ class LoansMenu(CTkFrame):
         self.return_button = CTkButton(self, text="Return Book", command=self.return_book)
         self.return_button.pack(pady=10)
         
-    def request_book(self):
-        selected_book = self.loans_listbox.get(self.loans_listbox.curselection())
-        book_id = get_book_id(selected_book)
-        
-        request_book(self.user_info["user_id"], book_id)
-        
-        self.loans_listbox.delete(tk.ACTIVE)
-        
     def return_book(self):
-        selected_book = self.loans_listbox.get(self.loans_listbox.curselection())
-        book_id = get_book_id(selected_book)
+        selected_index = self.loans_listbox.curselection()
         
-        return_book_by_user(self.user_info["user_id"], book_id)
+        if selected_index:
+            loan_id = selected_index[0] + 1
+            return_book_by_user(self.user_info["user_id"], loan_id)
+            self.loans_listbox.delete(selected_index)
+            
+        pass
+            
+    #Click request button and open search window and request book
+    def request_book(self):
+        #Open search window
+        self.search_window = CTkFrame(self)
+        self.search_window.pack(fill="both", expand=True)
         
-        self.loans_listbox.delete(tk.ACTIVE)
+        # Add Search Bar
+        self.search_bar = SearchBar(self.search_window)
+        self.search_bar.pack(fill="x", expand=True)
         
-def get_book_id(book_title):
-    book_details = get_book_details(book_title)
-    return book_details[0]
-
-
+        # Add Search Results Frame
+        self.search_results_frame = CTkFrame(self.search_window)
+        self.search_results_frame.pack(fill="both", expand=True)
         
+        # Add Search Results Label
+        self.search_results_label = CTkLabel(self.search_results_frame, text="Search Results")
+        self.search_results_label.pack(pady=10)
         
+        # Add Search Results Listbox
+        self.search_results_listbox = tk.Listbox(self.search_results_frame)
+        self.search_results_listbox.pack(fill="both", expand=True)
+        
+        # Add Search Button Click Event
+        self.search_bar.search_button.config(command=self.search_books)
+        
+        # Add Request Button Click Event
+        self.search_results_listbox.bind("<Double-Button-1>", self.request_selected_book)
+        
+        pass
+    
+    def search_books(self):
+        search_text = self.search_bar.entry.get()
+        books = search_books(search_text)
+        
+        self.search_results_listbox.delete(0, tk.END)
+        
+        for book in books:
+            self.search_results_listbox.insert(tk.END, book[1])
+            
+        pass
+    
+    def request_selected_book(self, event):
+        selected_index = self.search_results_listbox.curselection()
+        
+        if selected_index:
+            book_id = selected_index[0] + 1
+            request_book(self.user_info["user_id"], book_id)
+            self.search_window.pack_forget()
+            self.loans_listbox.insert(tk.END, self.search_results_listbox.get(selected_index))
+            
+        pass
+    
+    
+            
